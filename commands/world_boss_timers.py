@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, tzinfo, timezone
+from random import choice
 from tokenize import group
 
 import pytz
@@ -18,24 +19,28 @@ from dis_snek import (
 
 from dis_snek.models import Permissions
 
+# from enum import Enum
+# class Bosses(Enum, str):
+#     AZUREGOS = 'AZUREGOS'
+#     KAZZAK = 'KAZZAK'
+#     DRAGONS = 'DRAGONS'
 
 
 class WorldBossTimers(Scale):
     def __init__(self, bot):
         self.bot = bot
         self.timezone = pytz.timezone('US/Eastern')
-        self.bosses = ['Azuregos','Kazzak', 'Green Dragons']
+        self.bosses = ['Azuregos','Kazzak', 'Dragons']
         self.timers = {}
 
 
 
     @slash_command(
-        name='wboss',
-        description='World Boss related bot commands',
-        sub_cmd_name='timers',
-        sub_cmd_description='get current world boss windows'
+        name='windows',
+        description='Get curren Spawn windows',
         )
     async def timer_command(self, ctx: InteractionContext):
+        # TODO: move formatting to its own function
         response = '```Servertime: {servertime:%A %B %d %H:%M}\n{lines}```'
         line_fmt = '{}:\n \t START: {:%A %B %d %H:%M}\n \t END: {:%A %B %d %H:%M}\n\t {}'
         cur_dt = datetime.now(self.timezone)
@@ -67,8 +72,8 @@ class WorldBossTimers(Scale):
 
 
     @slash_command(
-        name='wboss',
-        description='World Boss related bot commands',
+        name='server',
+        description='server restart',
         sub_cmd_name='reset',
         sub_cmd_description='set world boss windows after a server restart'        
     )
@@ -80,7 +85,29 @@ class WorldBossTimers(Scale):
             self.timers.update({boss: {'start': start, 'end': end}})
         
         await ctx.send("Boss Timers have been updated based on a server restart")
-
+    
+    @slash_command(
+        name='dead',
+        description='Mark Boss Time of Death to update the spawn window'
+    )
+    @slash_option(
+        name='boss',
+        description='which boss died',
+        required=True,
+        opt_type=OptionTypes.STRING,
+        choices=[
+            SlashCommandChoice(name='Azuregos', value='Azuregos'),
+            SlashCommandChoice(name='Kazzak', value='Kazzak'),
+            SlashCommandChoice(name='Dragons', value='Dragons')
+        ],
+    )
+    async def time_of_death(self, ctx: InteractionContext, boss):
+        #TODO : cut off on server restart
+        cur_dt = datetime.now(self.timezone)
+        start = cur_dt + timedelta(hours=72)
+        end = cur_dt + timedelta(hours=120)
+        self.timers.update({boss: {'start': start, 'end': end}})
+        await ctx.send(f'{boss} Time of Death: {cur_dt}, Spawn window has been updated')
 
 def setup(bot):
     WorldBossTimers(bot)
