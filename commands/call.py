@@ -5,6 +5,10 @@ import json
 
 import pytz
 
+import asyncio
+
+import aiofiles
+
 
 from dis_snek import (
     ContextMenu,
@@ -21,21 +25,27 @@ from dis_snek import (
 
 from dis_snek.models import Permissions
 
+# async def read_file(filepath, mode):
+#     async with aiofiles.open(filepath, mode=mode) as f:
+#         await f.read()
+
+
+# def read_file(filepath, mode='r'):
+#     with open(filepath, mode=mode) as f:
+#         file = f.read()
+#     return json.loads(file)
+    
 
 class PhoneCall(Scale):
     def __init__(self, bot):
         self.bot = bot
         #TODO : this won't work need to write a function to open the file 
         #TODO : then JSON load US AIOFILES package to handle sync to ASYNC bs
-        self.phonelist = json.load('../data/phone.json')
+        with open('./data/phone.json') as f:
+            phone_list = json.loads(f.read())['phoneList']
+        self.phonelist = phone_list
 
-    # @slash_command(
-    #     name='phonecall',
-    #     description='call all the listed numbers that a boss is up'
-    # )
-    # async def phone_call(self, ctx: InteractionContext):
-    #     pass
-    
+
     @slash_command(
         name='addnumber',
         description='add a phone number to the call list'
@@ -47,9 +57,13 @@ class PhoneCall(Scale):
         opt_type=OptionTypes.STRING
     )
     async def add_number(self, ctx: InteractionContext, number):
+        print(self.phonelist)
         if number not in self.phonelist:
             self.phonelist.append(number)
-            json.dump({'phoneList': self.phonelist},'../data/phone.json')
+            async with aiofiles.open('./data/phone.json', mode='w+') as f:
+                data_json = json.dumps({'phoneList': self.phonelist})
+                await f.write(data_json)
+
         await ctx.send('number added')
 
 def setup(bot):
