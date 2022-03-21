@@ -1,13 +1,19 @@
+import os
+
 import dis_snek
 import logging
-from secrets import token
 
 from dis_snek import const, listen, slash_command, InteractionContext, Embed
 from dis_snek.client import Snake
 from dis_snek.models import ComponentContext, Intents
 from dis_snek.api.events import Component
 
+from secrets import token
 
+#cloud
+token = os.environ.get('DISCORD_TOKEN')
+#local
+# token = token
 
 logging.basicConfig()
 cls_log = logging.getLogger(const.logger_name)
@@ -20,7 +26,7 @@ class Bot(Snake):
             sync_interactions = True,
             delete_unused_application_cmds=True,
             asyncio_debug=True,
-            activity="with sneks",
+            activity="/help for help",
             debug_scope=949771069798113300,
             fetch_members=True,
         )
@@ -28,7 +34,7 @@ class Bot(Snake):
     @listen()
     async def on_ready(self):
         print("Ready")
-        print(f"This bot is owned by {bot.owner}")
+        print(f"This bot is owned by : Foldpre")
         print(f'{bot.user} logged in')
     
 
@@ -88,7 +94,7 @@ class Bot(Snake):
 
 
 bot = Bot()
-bot.g_id = 949771069798113300
+bot.g_id = 952935292287975494
 
 bot.grow_scale('commands.world_boss_timers')
 bot.grow_scale('commands.call')
