@@ -19,12 +19,6 @@ from dis_snek import (
 
 from dis_snek.models import Permissions
 
-# from enum import Enum
-# class Bosses(Enum, str):
-#     AZUREGOS = 'AZUREGOS'
-#     KAZZAK = 'KAZZAK'
-#     DRAGONS = 'DRAGONS'
-
 
 class WorldBossTimers(Scale):
     def __init__(self, bot):
@@ -37,7 +31,7 @@ class WorldBossTimers(Scale):
 
     @slash_command(
         name='windows',
-        description='Get curren Spawn windows',
+        description='Get current Spawn windows',
         )
     async def timer_command(self, ctx: InteractionContext):
         # TODO: move formatting to its own function
