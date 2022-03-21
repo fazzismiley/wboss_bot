@@ -27,7 +27,7 @@ class Bot(Snake):
             delete_unused_application_cmds=True,
             asyncio_debug=True,
             activity="/help for help",
-            debug_scope=949771069798113300,
+            debug_scope=952935292287975494,
             fetch_members=True,
         )
     
