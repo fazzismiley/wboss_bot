@@ -8,7 +8,7 @@ from dis_snek.client import Snake
 from dis_snek.models import ComponentContext, Intents
 from dis_snek.api.events import Component
 
-from secrets import token
+# from secrets import token
 
 #cloud
 token = os.environ.get('DISCORD_TOKEN')

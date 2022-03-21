@@ -23,7 +23,7 @@ from twilio.rest import Client
 from boto3 import session
 from botocore.client import Config
 
-from secrets import twilio_account_sid, twilio_auth_token, spaces_key, spaces_secret
+# from secrets import twilio_account_sid, twilio_auth_token, spaces_key, spaces_secret
 
 #cloud
 TWILIO_ACCNT_SID = os.environ.get('TWILIO_ACCNT_SID')
